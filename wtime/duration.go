@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"gitlab-ee.funplus.io/watcher/watcher/misc/wunsafe"
+	"github.com/kingsgroupos/misc/wunsafe"
 )
 
 const Day = 24 * time.Hour

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"gitlab-ee.funplus.io/watcher/watcher/misc"
+	"github.com/kingsgroupos/misc"
 )
 
 type RichInfoStyle int

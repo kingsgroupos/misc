@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	"gitlab-ee.funplus.io/watcher/watcher/misc"
+	"github.com/kingsgroupos/misc"
 )
 
 const (
