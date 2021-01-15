@@ -39,13 +39,12 @@ import (
 )
 
 func ResetWorkingDirectory() error {
-	exePath := os.Args[0]
-	absPath, err := filepath.Abs(exePath)
+	exePath, err := os.Executable()
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	dir := filepath.Dir(absPath)
+	dir := filepath.Dir(exePath)
 	if strings.HasSuffix(dir, fmt.Sprintf("%cbin", os.PathSeparator)) {
 		dir = filepath.Dir(dir)
 	} else if strings.HasSuffix(filepath.Dir(dir), fmt.Sprintf("%cbin", os.PathSeparator)) {
@@ -54,12 +53,12 @@ func ResetWorkingDirectory() error {
 	return os.Chdir(dir)
 }
 
-func AbsDir(p string, n int) (string, error) {
+func AbsDir(p string, nthR2L int) (string, error) {
 	d, err := filepath.Abs(p)
 	if err != nil {
 		return "", err
 	}
-	for i := 0; i < n; i++ {
+	for i := 0; i < nthR2L; i++ {
 		d = filepath.Dir(d)
 	}
 	return d, nil
