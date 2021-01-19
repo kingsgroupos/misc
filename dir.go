@@ -38,21 +38,6 @@ import (
 	"strings"
 )
 
-func ResetWorkingDirectory() error {
-	exePath, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-
-	dir := filepath.Dir(exePath)
-	if strings.HasSuffix(dir, fmt.Sprintf("%cbin", os.PathSeparator)) {
-		dir = filepath.Dir(dir)
-	} else if strings.HasSuffix(filepath.Dir(dir), fmt.Sprintf("%cbin", os.PathSeparator)) {
-		dir = filepath.Dir(filepath.Dir(dir))
-	}
-	return os.Chdir(dir)
-}
-
 func AbsDir(p string, nthR2L int) (string, error) {
 	d, err := filepath.Abs(p)
 	if err != nil {
