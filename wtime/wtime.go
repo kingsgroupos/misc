@@ -52,6 +52,20 @@ func UnixMicro(t time.Time) int64 {
 	return t.Unix()*1e6 + int64(t.Nanosecond()/1e3)
 }
 
+func CompareDate(t1, t2 time.Time, offsetFromUTC time.Duration) int {
+	offset := int64(offsetFromUTC / time.Second)
+	v1 := (t1.Unix() + offset) / 86400
+	v2 := (t2.Unix() + offset) / 86400
+	switch {
+	case v1 == v2:
+		return 0
+	case v1 < v2:
+		return -1
+	default:
+		return 1
+	}
+}
+
 func CompareDateUTC(t1, t2 time.Time) int {
 	v1 := t1.Unix() / 86400
 	v2 := t2.Unix() / 86400
