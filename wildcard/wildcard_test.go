@@ -1,5 +1,5 @@
 /*
- * MinIO Cloud Storage, (C) 2015, 2016 MinIO, Inc.
+ * Minio Cloud Storage, (C) 2015, 2016 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -371,7 +371,7 @@ func TestMatch(t *testing.T) {
 	for i, testCase := range testCases {
 		actualResult := Match(testCase.pattern, testCase.text)
 		if testCase.matched != actualResult {
-			t.Errorf("Test %d: Expected the result to be `%v`, but instead found it to be `%v`", i+1, testCase.matched, actualResult)
+			t.Fatalf("Test %d: Expected the result to be `%v`, but instead found it to be `%v`", i+1, testCase.matched, actualResult)
 		}
 	}
 }
@@ -534,7 +534,7 @@ func TestMatchSimple(t *testing.T) {
 	for i, testCase := range testCases {
 		actualResult := MatchSimple(testCase.pattern, testCase.text)
 		if testCase.matched != actualResult {
-			t.Errorf("Test %d: Expected the result to be `%v`, but instead found it to be `%v`", i+1, testCase.matched, actualResult)
+			t.Fatalf("Test %d: Expected the result to be `%v`, but instead found it to be `%v`", i+1, testCase.matched, actualResult)
 		}
 	}
 }

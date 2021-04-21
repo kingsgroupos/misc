@@ -30,39 +30,18 @@
 
 package werr
 
-import (
-	"errors"
-	"fmt"
-	"testing"
-)
+type Skinny interface {
+	UnwrapSkinny() error
+	Error() string
+}
 
-func TestRetriable_Unwrap(t *testing.T) {
-	err1 := errors.New("err1")
-	err2 := NewRetriable(err1)
-	var err3 error = err2
-	if errors.Unwrap(err3) != err1 {
-		t.Fatal("errors.Unwrap(err3) != err1")
-	}
-	if !errors.Is(err3, err1) {
-		t.Fatal("!errors.Is(err3, err1)")
-	}
-
-	err4 := fmt.Errorf("err4: %w", err3)
-	if !errors.Is(err4, err1) {
-		t.Fatal("!errors.Is(err4, err1)")
-	}
-
-	if err5, ok := AsRetriable(err4); !ok || err5 != err2 {
-		t.Fatal("!ok || err5 != err2")
-	}
-	if err6, ok := AsRetriable(err3); !ok || err6 != err2 {
-		t.Fatal("!ok || err6 != err2")
-	}
-
-	var err7 error = NewRetriable(err4)
-	if err8, ok := AsRetriable(err7); !ok || err8 != err7 {
-		t.Fatal("!ok || err8 != err7")
-	} else if err9, ok := AsRetriable(err8.error); !ok || err9 != err2 {
-		t.Fatal("!ok || err9 != err2")
+func Skin(err error) error {
+	for {
+		skinny, ok := err.(Skinny)
+		if !ok {
+			return err
+		} else {
+			err = skinny.UnwrapSkinny()
+		}
 	}
 }

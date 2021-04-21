@@ -52,7 +52,7 @@ func (s String) Atoi64() (int64, error) {
 		if s[0] == '-' || s[0] == '+' {
 			s = s[1:]
 			if len(s) < 1 {
-				return 0, &strconv.NumError{fnAtoi64, string(s0), strconv.ErrSyntax}
+				return 0, &strconv.NumError{Func: fnAtoi64, Num: string(s0), Err: strconv.ErrSyntax}
 			}
 		}
 
@@ -60,7 +60,7 @@ func (s String) Atoi64() (int64, error) {
 		for _, ch := range []byte(s) {
 			ch -= '0'
 			if ch > 9 {
-				return 0, &strconv.NumError{fnAtoi64, string(s0), strconv.ErrSyntax}
+				return 0, &strconv.NumError{Func: fnAtoi64, Num: string(s0), Err: strconv.ErrSyntax}
 			}
 			n = n*10 + int64(ch)
 		}
@@ -86,12 +86,12 @@ func (s String) Atou64() (uint64, error) {
 		// Fast path for small integers that fit int type.
 		s0 := s
 		if s[0] == '-' {
-			return 0, &strconv.NumError{fnAtou64, string(s0), strconv.ErrSyntax}
+			return 0, &strconv.NumError{Func: fnAtou64, Num: string(s0), Err: strconv.ErrSyntax}
 		}
 		if s[0] == '+' {
 			s = s[1:]
 			if len(s) < 1 {
-				return 0, &strconv.NumError{fnAtou64, string(s0), strconv.ErrSyntax}
+				return 0, &strconv.NumError{Func: fnAtou64, Num: string(s0), Err: strconv.ErrSyntax}
 			}
 		}
 
@@ -99,7 +99,7 @@ func (s String) Atou64() (uint64, error) {
 		for _, ch := range []byte(s) {
 			ch -= '0'
 			if ch > 9 {
-				return 0, &strconv.NumError{fnAtou64, string(s0), strconv.ErrSyntax}
+				return 0, &strconv.NumError{Func: fnAtou64, Num: string(s0), Err: strconv.ErrSyntax}
 			}
 			n = n*10 + uint64(ch)
 		}

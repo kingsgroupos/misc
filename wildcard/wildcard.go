@@ -1,5 +1,5 @@
 /*
- * MinIO Cloud Storage, (C) 2015, 2016 MinIO, Inc.
+ * Minio Cloud Storage, (C) 2015, 2016 Minio, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,16 @@ func MatchSimple(pattern, name string) bool {
 	if pattern == "*" {
 		return true
 	}
-	// Does only wildcard '*' match.
-	return deepMatchRune([]rune(name), []rune(pattern), true)
+	rname := make([]rune, 0, len(name))
+	rpattern := make([]rune, 0, len(pattern))
+	for _, r := range name {
+		rname = append(rname, r)
+	}
+	for _, r := range pattern {
+		rpattern = append(rpattern, r)
+	}
+	const simple = true // Does only wildcard '*' match.
+	return deepMatchRune(rname, rpattern, simple)
 }
 
 // Match -  finds whether the text matches/satisfies the pattern string.
@@ -41,8 +49,16 @@ func Match(pattern, name string) (matched bool) {
 	if pattern == "*" {
 		return true
 	}
-	// Does extended wildcard '*' and '?' match.
-	return deepMatchRune([]rune(name), []rune(pattern), false)
+	rname := make([]rune, 0, len(name))
+	rpattern := make([]rune, 0, len(pattern))
+	for _, r := range name {
+		rname = append(rname, r)
+	}
+	for _, r := range pattern {
+		rpattern = append(rpattern, r)
+	}
+	const simple = false // Does extended wildcard '*' and '?' match.
+	return deepMatchRune(rname, rpattern, simple)
 }
 
 func deepMatchRune(str, pattern []rune, simple bool) bool {

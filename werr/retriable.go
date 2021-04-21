@@ -45,6 +45,10 @@ func NewRetriable(err error) Retriable {
 	}
 }
 
+func (x Retriable) UnwrapSkinny() error {
+	return x.error
+}
+
 func (x Retriable) Unwrap() error {
 	return x.error
 }

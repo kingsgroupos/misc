@@ -46,11 +46,11 @@ const (
 	RichInfoStyle_JSONFriendly
 )
 
-var Style RichInfoStyle
+var InfoStyle RichInfoStyle
 
 type RichError struct {
 	err     error
-	Details []interface{}
+	details []interface{}
 }
 
 func NewRichError(err error, details ...interface{}) *RichError {
@@ -61,7 +61,7 @@ func NewRichError(err error, details ...interface{}) *RichError {
 	}
 	return &RichError{
 		err:     err,
-		Details: details,
+		details: details,
 	}
 }
 
@@ -77,20 +77,20 @@ func (this *RichError) stringImpl(w io.Writer) {
 }
 
 func (this *RichError) printDetails(w io.Writer) {
-	n := len(this.Details)
+	n := len(this.details)
 	if n == 0 {
 		return
 	}
 
-	if Style == RichInfoStyle_JSONFriendly {
+	if InfoStyle == RichInfoStyle_JSONFriendly {
 		for i := 0; i < n; i += 2 {
-			k, v := this.Details[i], this.Details[i+1]
+			k, v := this.details[i], this.details[i+1]
 			const format = ", %s: %s"
 			_, _ = fmt.Fprintf(w, format, fmt.Sprint(k), misc.ToPlainJSON(v))
 		}
 	} else {
 		for i := 0; i < n; i += 2 {
-			k, v := this.Details[i], this.Details[i+1]
+			k, v := this.details[i], this.details[i+1]
 			format := ", %q: %s"
 			if i == 0 {
 				format = " {%q: %s"
@@ -123,4 +123,21 @@ func AsRichError(err error) (*RichError, bool) {
 	var x *RichError
 	ok := errors.As(err, &x)
 	return x, ok
+}
+
+func ExtractDetails(err error) []interface{} {
+	var a []interface{}
+	for {
+		if x, ok := AsRichError(err); !ok {
+			break
+		} else if a == nil {
+			n := len(x.details)
+			a = x.details[:n:n]
+			err = x.err
+		} else {
+			a = append(a, x.details...)
+			err = x.err
+		}
+	}
+	return a
 }

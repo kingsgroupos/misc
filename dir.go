@@ -93,7 +93,7 @@ func AllFiles(patterns []string, suffix string, singleDir bool) ([]string, error
 func FindFile(name string) error {
 	stat, err := os.Stat(name)
 	if err != nil {
-		return err
+		return fmt.Errorf("os.Stat() failed. name: %s, err: %w", name, err)
 	}
 	if stat.IsDir() {
 		return fmt.Errorf("%s is a directory", name)
@@ -104,7 +104,7 @@ func FindFile(name string) error {
 func FindDirectory(name string) error {
 	stat, err := os.Stat(name)
 	if err != nil {
-		return err
+		return fmt.Errorf("os.Stat() failed. name: %s, err: %w", name, err)
 	}
 	if !stat.IsDir() {
 		return fmt.Errorf("%s is a NOT a directory", name)

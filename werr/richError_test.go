@@ -36,33 +36,36 @@ import (
 	"testing"
 )
 
-func TestRetriable_Unwrap(t *testing.T) {
-	err1 := errors.New("err1")
-	err2 := NewRetriable(err1)
-	var err3 error = err2
-	if errors.Unwrap(err3) != err1 {
-		t.Fatal("errors.Unwrap(err3) != err1")
-	}
-	if !errors.Is(err3, err1) {
-		t.Fatal("!errors.Is(err3, err1)")
+func TestExtractDetails(t *testing.T) {
+	err1 := errors.New("1st")
+	if ExtractDetails(err1) != nil {
+		t.Fatal("ExtractDetails(err1) != nil")
 	}
 
-	err4 := fmt.Errorf("err4: %w", err3)
-	if !errors.Is(err4, err1) {
-		t.Fatal("!errors.Is(err4, err1)")
+	err2 := NewRichError(err1, "2nd", 2)
+	if len(ExtractDetails(err2)) != 2 {
+		t.Fatal("len(ExtractDetails(err2)) != 2")
 	}
 
-	if err5, ok := AsRetriable(err4); !ok || err5 != err2 {
-		t.Fatal("!ok || err5 != err2")
-	}
-	if err6, ok := AsRetriable(err3); !ok || err6 != err2 {
-		t.Fatal("!ok || err6 != err2")
+	err3 := NewRichError(err2, "3rd", 3)
+	err4 := fmt.Errorf("foo: %w", err3)
+	err5 := NewRichError(err4, "5th")
+	err6 := fmt.Errorf("bar: %w", err5)
+	err7, ok := AsRichError(err6)
+	if !ok {
+		t.Fatal("AsRichError does not work as expected")
 	}
 
-	var err7 error = NewRetriable(err4)
-	if err8, ok := AsRetriable(err7); !ok || err8 != err7 {
-		t.Fatal("!ok || err8 != err7")
-	} else if err9, ok := AsRetriable(err8.error); !ok || err9 != err2 {
-		t.Fatal("!ok || err9 != err2")
+	expected := []interface{}{
+		"5th", "3rd", 3, "2nd", 2,
+	}
+	all := ExtractDetails(err7)
+	if len(all) != len(expected) {
+		t.Fatal("len(all) != len(expected)")
+	}
+	for i, v := range all {
+		if v != expected[i] {
+			t.Fatal("v != expected[i]")
+		}
 	}
 }
